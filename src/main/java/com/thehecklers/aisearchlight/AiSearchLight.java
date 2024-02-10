@@ -1,6 +1,7 @@
 package com.thehecklers.aisearchlight;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,19 @@ public class AiSearchLight {
         this.vectorStore = vectorStore;
     }
 
-    @PostConstruct
-    public void search() {
-        vectorStore.similaritySearch(SearchRequest.query("Piper")
-                        .withTopK(50)
-//                        .withFilterExpression("wing_span_ft lt 38"))
-                .forEach(System.out::println);
+//    @PostConstruct
+    public void funRun() {
+        //searchWithParameters(5, "engineType == 'Piston'");
+        search("Piper", 5, "engineType == 'Piston'").forEach(System.out::println);
+    }
+
+    //    public Iterable<Document> search() {
+//        return vectorStore.similaritySearch(SearchRequest.query("Piper"));
+//    }
+//
+    public Iterable<Document> search(String query, int limit, String filter) {
+        return vectorStore.similaritySearch(SearchRequest.query(query)
+                .withTopK(limit)
+                .withFilterExpression(filter));
     }
 }
